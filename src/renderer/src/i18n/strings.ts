@@ -5,7 +5,7 @@ export function pick<T>(value: Localized<T>, lang: Language): T {
 }
 
 export const ui = {
-  appTitle: { zh: '桌面塔罗', en: 'Desktop Tarot' },
+  appTitle: { zh: '海星塔罗', en: 'Starfish Tarot' },
   categorySubtitle: { zh: '今天想为哪件事求一个指引？', en: 'What would you like guidance on today?' },
   pickInstruction: { zh: '凭直觉选出 3 张牌', en: 'Pick 3 cards by intuition' },
   yourSpread: { zh: '你的牌阵', en: 'Your Spread' },
@@ -26,25 +26,19 @@ export const ui = {
   back: { zh: '返回', en: 'Back' },
   yourQuestion: { zh: '你的问题', en: 'Your question' },
   aiReading: { zh: 'AI 深度解读', en: 'AI Reading' },
-  aiGenerate: { zh: '生成 AI 解读', en: 'Generate AI reading' },
+  aiGenerate: { zh: '请 Dots 解读', en: 'Ask Dots to read' },
   aiThinking: { zh: '正在解读…', en: 'Reading the cards…' },
   aiRetry: { zh: '重试', en: 'Retry' },
-  aiNeedsKey: {
-    zh: '需要先填入 Anthropic API Key 才能使用 AI 解读',
-    en: 'Add an Anthropic API key to enable AI readings'
+  aiReady: {
+    zh: '由小红书 Dots 根据你的问题与完整牌阵生成解读。',
+    en: 'Dots reads your question and the full spread together.'
+  },
+  aiUnavailable: {
+    zh: 'AI 暂时不可用，请稍后重试。',
+    en: 'AI is temporarily unavailable. Please try again.'
   },
   aiFailed: { zh: 'AI 解读失败', en: 'AI reading failed' },
-  settings: { zh: '设置', en: 'Settings' },
-  apiKeyLabel: { zh: 'Anthropic API Key', en: 'Anthropic API Key' },
-  apiKeyHint: {
-    zh: '填入后即可使用 AI 深度解读。Key 会用系统钥匙串加密保存在本地，不会上传到任何地方。留空则只用本地牌意库。',
-    en: 'Enables AI readings. Stored locally, encrypted with your OS keychain — never uploaded anywhere. Leave empty to use only the local meanings.'
-  },
-  apiKeySaved: { zh: '已保存', en: 'Saved' },
-  storedAt: { zh: '保存位置', en: 'Stored at' },
   symbolism: { zh: '牌面象征', en: 'In the image' },
   watchFor: { zh: '需要留意', en: 'Watch for' },
-  save: { zh: '保存', en: 'Save' },
-  clear: { zh: '清除', en: 'Clear' },
   close: { zh: '关闭', en: 'Close' }
 } satisfies Record<string, Localized<string>>

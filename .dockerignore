@@ -1,0 +1,10 @@
+.git
+.github
+node_modules
+dist-web
+.wrangler
+.env
+.env.*
+.dev.vars
+deploy-config.json
+npm-debug.log*

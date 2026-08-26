@@ -1,48 +1,48 @@
-# 部署网页版
+# 部署说明
 
-渲染层没有任何 Electron / Node 依赖，所有经过 preload 桥接的调用都有兜底，所以同一份源码可以直接构建成静态站点。
+生产环境由两层组成：
 
-```bash
-npm run build:web     # 产物在 dist-web/
-npm run preview:web   # 本地预览产物
+1. AI Builders Space 从公开 GitHub 仓库构建 Docker 镜像，以单进程提供网页。
+2. Cloudflare Worker 绑定 `tarot.haixing.uk`，代理网页，并在 `/api/reading` 调用 Dots。
+
+## AI Builders Space
+
+- Repository: `https://github.com/starfishwrx/desktop-tarot-cards-dots3`
+- Branch: `main`
+- Service name: `starfish-tarot`
+- Port: `8000`
+
+容器必须读取平台注入的 `PORT`。部署完成后，等待状态变为 `HEALTHY`，并验证：
+
+```text
+https://starfish-tarot.ai-builders.space/healthz
 ```
 
-`BASE_PATH` 控制资源前缀：托管在域名根目录时留空，托管在子路径时设为该路径。
+AI Builders Space 不保存 Dots Key；不要通过部署 `env_vars` 传递第三方秘密。
+
+## Cloudflare
+
+`wrangler.jsonc` 定义 Worker、D1 绑定、AI Builders 源站和自定义域名。首次部署：
 
 ```bash
-BASE_PATH=/desktop-tarot-cards/ npm run build:web
+npx wrangler login
+npx wrangler d1 create starfish-tarot-rate-limit
+# 把返回的 database_id 写入 wrangler.jsonc
+npx wrangler d1 migrations apply starfish-tarot-rate-limit --remote
+npx wrangler deploy
+npx wrangler secret put DOTS_API_KEY
+npx wrangler secret put RATE_LIMIT_SALT
 ```
 
-## GitHub Pages（已自动化）
+真实值只能通过 Wrangler Secret 或 Cloudflare 控制台 Secret 写入。不得写入 `.env.example`、`wrangler.jsonc`、GitHub Actions 或仓库历史。
 
-`.github/workflows/deploy-web.yml` 会在 push 到 `main` 时自动构建并发布。
+Worker Custom Domain 为 `tarot.haixing.uk`。如果该主机名已有 DNS 记录，先确认用途，不要直接覆盖。
 
-**首次需要手动开启一次**：仓库 → Settings → Pages → Source 选择 **GitHub Actions**。
+## 发布验收
 
-之后每次 push 自动更新，地址为 `https://<用户名>.github.io/desktop-tarot-cards/`。
-
-## Cloudflare Pages（国内访问更稳，需在控制台配置一次）
-
-GitHub Pages 在国内访问不稳定，建议同时部署一份 Cloudflare 镜像。两者用同一个仓库、同一份构建产物。
-
-1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-2. 授权并选择 `desktop-tarot-cards` 仓库
-3. 构建配置填：
-
-   | 项目 | 值 |
-   |---|---|
-   | Framework preset | None |
-   | Build command | `npm run build:web` |
-   | Build output directory | `dist-web` |
-   | Root directory | *(留空)* |
-
-4. 环境变量**不用设** `BASE_PATH`——Cloudflare 从根目录提供服务，默认的 `/` 正确
-5. 保存后自动构建，得到 `https://<项目名>.pages.dev`
-
-之后 push 到 `main` 时两边都会自动更新。
-
-## 关于 AI 解读
-
-网页版不提供 AI 解读，这是有意的：Anthropic API Key 一旦填进网页就等于公开泄露，而且浏览器直连 Anthropic 也会被 CORS 拦截。`AiReadingPanel` 检测不到 `window.api` 时会自行隐藏，本地牌意库不受影响。
-
-需要 AI 解读的用户请使用桌面版。
+- AI Builders 状态为 `HEALTHY`。
+- `https://tarot.haixing.uk/healthz` 返回 `gateway: cloudflare`。
+- 首页、牌图、中英文切换和移动端布局正常。
+- 一次真实 AI 解读返回 Dots 生成的文本。
+- 第 11 次同来源小时请求返回 HTTP 429。
+- 仓库、镜像和公开日志中没有任何真实 AK。
