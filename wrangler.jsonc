@@ -3,7 +3,7 @@
   "name": "starfish-tarot-gateway",
   "main": "worker/src/index.ts",
   "compatibility_date": "2026-08-26",
-  "workers_dev": true,
+  "workers_dev": false,
   "routes": [
     { "pattern": "tarot.haixing.uk", "custom_domain": true }
   ],
