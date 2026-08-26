@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "starfish-tarot-gateway",
+  "main": "worker/src/index.ts",
+  "compatibility_date": "2026-08-26",
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "tarot.haixing.uk", "custom_domain": true }
+  ],
+  "vars": {
+    "ORIGIN_URL": "https://starfish-tarot.ai-builders.space",
+    "DOTS_BASE_URL": "https://note3-prev-api.askdiandian.com"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "starfish-tarot-rate-limit",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "worker/migrations"
+    }
+  ]
+}

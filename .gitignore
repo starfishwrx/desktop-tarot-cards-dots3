@@ -1,6 +1,12 @@
 node_modules/
-out/
 dist/
+dist-web/
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
+deploy-config.json
 *.tsbuildinfo
 .DS_Store
 .claude/
@@ -8,4 +14,3 @@ dist/
 # Reference dataset cloned locally for sourcing card art/metadata —
 # already copied into src/renderer/src/assets/cards, not part of the app.
 tarot-json/
-dist-web/
