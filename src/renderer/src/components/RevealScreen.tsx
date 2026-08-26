@@ -7,7 +7,7 @@ import { InterpretationPanel } from './InterpretationPanel'
 import { AiReadingPanel } from './AiReadingPanel'
 import { RestartButton } from './RestartButton'
 
-export function RevealScreen({ onNeedsKey }: { onNeedsKey: () => void }): JSX.Element {
+export function RevealScreen(): JSX.Element {
   const { category, draws, question } = useReading()
   const { language, t } = useLanguage()
 
@@ -31,14 +31,7 @@ export function RevealScreen({ onNeedsKey }: { onNeedsKey: () => void }): JSX.El
       )}
       <SpreadLayout draws={draws} />
       <InterpretationPanel draws={draws} summary={summary} />
-      {category && (
-        <AiReadingPanel
-          category={category}
-          question={question}
-          draws={draws}
-          onNeedsKey={onNeedsKey}
-        />
-      )}
+      {category && <AiReadingPanel category={category} question={question} draws={draws} />}
       <RestartButton />
     </div>
   )

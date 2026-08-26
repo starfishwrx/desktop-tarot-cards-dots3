@@ -1,9 +1,13 @@
 node_modules/
 out/
 dist/
+dist-server/
 *.tsbuildinfo
 .DS_Store
 .claude/
+.env
+.env.*
+!.env.example
 
 # Reference dataset cloned locally for sourcing card art/metadata —
 # already copied into src/renderer/src/assets/cards, not part of the app.

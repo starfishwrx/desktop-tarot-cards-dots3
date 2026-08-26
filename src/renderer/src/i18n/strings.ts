@@ -27,24 +27,22 @@ export const ui = {
   yourQuestion: { zh: '你的问题', en: 'Your question' },
   aiReading: { zh: 'AI 深度解读', en: 'AI Reading' },
   aiGenerate: { zh: '生成 AI 解读', en: 'Generate AI reading' },
+  aiReady: {
+    zh: '由小红书 Dots 模型提供深度解读',
+    en: 'Deep reading powered by the Dots model'
+  },
   aiThinking: { zh: '正在解读…', en: 'Reading the cards…' },
   aiRetry: { zh: '重试', en: 'Retry' },
-  aiNeedsKey: {
-    zh: '需要先填入 Anthropic API Key 才能使用 AI 解读',
-    en: 'Add an Anthropic API key to enable AI readings'
+  aiRateLimited: {
+    zh: '请求太频繁，请稍后再试',
+    en: 'Too many requests. Please try again shortly.'
   },
-  aiFailed: { zh: 'AI 解读失败', en: 'AI reading failed' },
-  settings: { zh: '设置', en: 'Settings' },
-  apiKeyLabel: { zh: 'Anthropic API Key', en: 'Anthropic API Key' },
-  apiKeyHint: {
-    zh: '填入后即可使用 AI 深度解读。Key 会用系统钥匙串加密保存在本地，不会上传到任何地方。留空则只用本地牌意库。',
-    en: 'Enables AI readings. Stored locally, encrypted with your OS keychain — never uploaded anywhere. Leave empty to use only the local meanings.'
+  aiTimeout: { zh: 'Dots 解读超时，请重试', en: 'Dots took too long. Please retry.' },
+  aiUnavailable: {
+    zh: 'Dots 解读暂时不可用，请稍后重试',
+    en: 'Dots reading is temporarily unavailable. Please try again.'
   },
-  apiKeySaved: { zh: '已保存', en: 'Saved' },
-  storedAt: { zh: '保存位置', en: 'Stored at' },
   symbolism: { zh: '牌面象征', en: 'In the image' },
   watchFor: { zh: '需要留意', en: 'Watch for' },
-  save: { zh: '保存', en: 'Save' },
-  clear: { zh: '清除', en: 'Clear' },
-  close: { zh: '关闭', en: 'Close' }
+  save: { zh: '保存', en: 'Save' }
 } satisfies Record<string, Localized<string>>
