@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>塔罗牌与 AI 解读指南｜海星塔罗</title>
+    <meta name="description" content="了解海星塔罗的 78 张韦特牌、五种三牌牌阵、正逆位含义、Dots AI 综合解读方式、隐私保护与使用边界。" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1" />
+    <link rel="canonical" href="https://tarot.haixing.uk/tarot-guide.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="塔罗牌与 AI 解读指南｜海星塔罗" />
+    <meta property="og:description" content="从牌组、牌阵和正逆位，到 Dots AI 如何生成综合解读。" />
+    <meta property="og:url" content="https://tarot.haixing.uk/tarot-guide.html" />
+    <meta property="og:image" content="https://tarot.haixing.uk/og-tarot.jpg" />
+    <style>
+      *{box-sizing:border-box}body{margin:0;background:#f5eedd;color:#1a1414;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif;line-height:1.75}main{width:min(820px,calc(100% - 28px));margin:28px auto;padding:30px;background:#fffaf0;border:3px solid #1a1414;border-radius:18px;box-shadow:7px 7px 0 #1a1414}h1,h2{line-height:1.25}h1{color:#d7263d}h2{margin-top:30px}a{color:#1b4079;font-weight:800}.note{padding:14px 16px;background:#f5b70033;border-left:5px solid #f5b700}.en{border-top:2px dashed #999;margin-top:36px;padding-top:24px}@media(max-width:600px){main{padding:22px}}
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="/">← 返回海星塔罗开始抽牌</a></p>
+      <article>
+        <h1>塔罗牌与 Dots AI 解读指南</h1>
+        <p>海星塔罗是一款免费的中英文在线塔罗应用。它把完整牌组的本地牌义与 AI 综合分析分开：本地内容随时可读，只有用户主动点击时才会请求 Dots AI。</p>
+        <h2>完整 78 张 Rider-Waite-Smith 塔罗牌</h2>
+        <p>牌组包含 22 张大阿尔卡那和 56 张小阿尔卡那。小阿尔卡那分为权杖、圣杯、宝剑和星币四组。每张牌都可能以正位或逆位出现，两种方向会改变关注重点，但逆位并不简单等于“坏”。</p>
+        <h2>五种三牌牌阵</h2>
+        <ul><li>爱情：观察关系中的现状、张力与下一步。</li><li>事业：观察动力、阻碍与可执行方向。</li><li>财运：观察资源、风险意识与近期选择。</li><li>整体运势：观察当前主题、影响因素与行动重点。</li><li>自定义问题：围绕用户自己写下的问题展开三牌解读。</li></ul>
+        <h2>AI 如何形成综合解读？</h2>
+        <p>Dots AI 会收到经过验证的语言、问题、牌阵位置和卡牌正逆位。提示词要求模型先观察大阿尔卡那数量、主导花色或元素、逆位和重复数字，再结合每张牌的位置与相互关系，最后给出近期可使用的反思方向。</p>
+        <h2>隐私、密钥与频率限制</h2>
+        <p>Dots API 密钥保存在 Cloudflare Worker Secret 中，不会出现在浏览器或公开仓库。AI 请求使用匿名频率限制；问题文本只用于生成当次解读。</p>
+        <p class="note">塔罗描述模式与选择，不提供确定性结果，也不替代医疗、法律或财务专业意见。</p>
+        <section class="en" lang="en">
+          <h2>English summary</h2>
+          <p>Starfish Tarot is a free bilingual web app with the complete 78-card Rider-Waite-Smith deck, five three-card spreads, upright and reversed local meanings, and an optional Dots AI synthesis. AI requests are validated, rate-limited and sent through a protected gateway; the API key is never exposed to the browser.</p>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>

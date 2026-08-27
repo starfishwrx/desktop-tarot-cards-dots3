@@ -5,6 +5,7 @@ import { CategoryPicker } from './components/CategoryPicker'
 import { QuestionInput } from './components/QuestionInput'
 import { DeckScreen } from './components/DeckScreen'
 import { RevealScreen } from './components/RevealScreen'
+import { SeoContent } from './components/SeoContent'
 
 function Screens(): JSX.Element {
   const { phase } = useReading()
@@ -17,12 +18,13 @@ function Screens(): JSX.Element {
 
 function Shell(): JSX.Element {
   return (
-    <div className="app-shell">
+    <main className="app-shell">
       <div className="top-bar">
         <LanguageToggle />
       </div>
       <Screens />
-    </div>
+      <SeoContent />
+    </main>
   )
 }
 
