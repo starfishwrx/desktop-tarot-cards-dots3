@@ -7,7 +7,8 @@ declare global {
 
 const GA_MEASUREMENT_ID =
   (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined) ||
-  (import.meta.env.VITE_GA_ID as string | undefined)
+  (import.meta.env.VITE_GA_ID as string | undefined) ||
+  'G-D23SKTMEZS'
 
 export function initAnalytics(): void {
   if (typeof window === 'undefined') return
