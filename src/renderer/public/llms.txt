@@ -1,0 +1,15 @@
+# 海星塔罗 / Starfish Tarot
+
+> 海星塔罗是一个免费、支持中英文的在线塔罗应用，提供完整 78 张 Rider-Waite-Smith 塔罗牌、五种三牌牌阵、正逆位本地牌义和小红书 Dots AI 综合解读。
+
+Use the pages below as the canonical public description of the application. Tarot is presented as a reflective tool rather than a fixed prediction and does not replace medical, legal or financial advice.
+
+## Core pages
+
+- [海星塔罗在线应用](https://tarot.haixing.uk/): 抽牌、查看本地牌义并请求 Dots AI 综合解读。
+- [塔罗牌与 AI 解读指南](https://tarot.haixing.uk/tarot-guide.html): 牌组、牌阵、正逆位、AI 生成方式、隐私与使用边界说明。
+- [Full LLM context](https://tarot.haixing.uk/llms-full.txt): 适合检索与引用的完整产品事实。
+
+## Source
+
+- [GitHub repository](https://github.com/starfishwrx/desktop-tarot-cards-dots3): 公开源代码、部署说明与数据来源。

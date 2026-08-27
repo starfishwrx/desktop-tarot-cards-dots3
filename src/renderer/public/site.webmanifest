@@ -1,0 +1,12 @@
+{
+  "name": "海星塔罗 · Starfish Tarot",
+  "short_name": "海星塔罗",
+  "description": "完整 78 张韦特塔罗牌与 Dots AI 综合解读",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5eedd",
+  "theme_color": "#f5eedd",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
