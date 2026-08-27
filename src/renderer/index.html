@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://tarot.haixing.uk;" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://www.googletagmanager.com; connect-src 'self' https://tarot.haixing.uk https://cloudflareinsights.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google-analytics.com https://*.google-analytics.com;" />
     <title>免费在线塔罗牌占卜与 AI 解读｜海星塔罗</title>
     <meta name="description" content="海星塔罗提供完整 78 张韦特塔罗牌、爱情事业财运等五种牌阵、正逆位牌义与小红书 Dots AI 综合解读，支持中英文，免费在线使用。" />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
@@ -13,6 +13,19 @@
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#f5eedd" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D23SKTMEZS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-D23SKTMEZS');
+    </script>
+
+    <!-- Cloudflare Web Analytics -->
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "c22af1a5bbe14e47a52ceff91659ab96"}'></script>
+    <!-- End Cloudflare Web Analytics -->
 
     <!-- Link previews when the page is shared. Crawlers read these; the page's
          own CSP governs in-page requests only, so an absolute URL is fine. -->
