@@ -38,6 +38,8 @@ npx wrangler secret put RATE_LIMIT_SALT
 
 Worker Custom Domain 为 `tarot.haixing.uk`。如果该主机名已有 DNS 记录，先确认用途，不要直接覆盖。
 
+Cloudflare Web Analytics 只通过域名控制台自动注入，不要再把 beacon 脚本写入 `index.html`，否则会重复统计。GA4 ID 可在构建时用 `VITE_GA_MEASUREMENT_ID` 覆盖；默认 ID 已配置，但脚本只在访客明确允许后加载。HTML 在浏览器端立即重新验证，哈希静态资源长期缓存，Worker 在边缘短暂缓存 HTML。
+
 ## 发布验收
 
 - AI Builders 状态为 `HEALTHY`。

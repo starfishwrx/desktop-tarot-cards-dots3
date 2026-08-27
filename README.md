@@ -12,6 +12,7 @@
 - 结果页可点击“请 Dots 解读”，按问题、牌阵位置和三张牌的关系生成综合解读。
 - Dots API Key 只存在 Cloudflare Worker Secret 中，浏览器和 GitHub 均不可见。
 - 匿名免费使用；单个来源每小时最多 10 次 AI 解读。
+- Cloudflare Web Analytics 由域名侧单次注入；可选的 GA4 漏斗统计仅在访客同意后加载，不记录问题文本或牌面 ID。
 
 ## 本地开发
 

@@ -4,6 +4,8 @@ A comic-style web tarot app with all 78 Rider-Waite-Smith cards, five spreads, u
 
 The local reading corpus always works. The browser sends only a category, question, three card IDs and orientations to a Cloudflare Worker; the Dots key never reaches the browser or repository.
 
+Cloudflare Web Analytics is injected once at the custom-domain edge. Optional GA4 funnel analytics loads only after visitor consent and does not record question text or card IDs.
+
 ## Development
 
 Node.js 22 or newer is required.

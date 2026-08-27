@@ -20,6 +20,11 @@ describe('SEO and GEO assets', () => {
       'WebApplication',
       'FAQPage'
     ])
+
+    expect(html).toContain('<div id="root"></div>')
+    expect(html).not.toContain('seo-fallback')
+    expect(html).not.toContain('data-cf-beacon')
+    expect(html).not.toContain('googletagmanager.com/gtag/js?id=')
   })
 
   it('exposes matching crawler and generative-engine discovery files', () => {
@@ -34,5 +39,9 @@ describe('SEO and GEO assets', () => {
     expect(llms).toMatch(/^# 海星塔罗 \/ Starfish Tarot/m)
     expect(llms).toContain('https://tarot.haixing.uk/llms-full.txt')
     expect(full).toContain('Canonical URL: https://tarot.haixing.uk/')
+
+    const guide = readFileSync(resolve(rendererRoot, 'public/tarot-guide.html'), 'utf8')
+    expect(guide).toContain('<h1>')
+    expect(guide).toContain('78')
   })
 })

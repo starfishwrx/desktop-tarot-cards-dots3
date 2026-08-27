@@ -38,6 +38,13 @@ export const ui = {
     en: 'AI is temporarily unavailable. Please try again.'
   },
   aiFailed: { zh: 'AI 解读失败', en: 'AI reading failed' },
+  analyticsConsentLabel: { zh: '使用统计设置', en: 'Analytics settings' },
+  analyticsConsent: {
+    zh: '是否允许匿名使用统计，帮助我们改善网站？拒绝不会影响抽牌和解读。',
+    en: 'Allow anonymous usage analytics to help improve the site? Declining does not affect readings.'
+  },
+  analyticsAccept: { zh: '允许', en: 'Allow' },
+  analyticsReject: { zh: '拒绝', en: 'Decline' },
   symbolism: { zh: '牌面象征', en: 'In the image' },
   watchFor: { zh: '需要留意', en: 'Watch for' },
   close: { zh: '关闭', en: 'Close' }

@@ -100,25 +100,37 @@ export function ReadingProvider({ children }: { children: ReactNode }): JSX.Elem
       ...state,
       categories,
       selectCategory: (categoryId) => {
-        trackEvent('select_category', { category_id: categoryId })
+        if (!categories.some((category) => category.id === categoryId)) return
         dispatch({ type: 'SELECT_CATEGORY', categoryId })
+        trackEvent('tarot_category_selected', { category_id: categoryId })
       },
       submitQuestion: (question) => {
-        trackEvent('submit_question', { question_length: question.trim().length })
+        const trimmedQuestion = question.trim()
+        if (state.phase !== 'question-input' || !trimmedQuestion) return
         dispatch({ type: 'SUBMIT_QUESTION', question })
+        trackEvent('tarot_question_submitted', { question_length: trimmedQuestion.length })
       },
       pickCard: (cardId) => {
-        if (state.category && state.draws.length === 2 && !state.draws.some((d) => d.card.id === cardId)) {
-          trackEvent('draw_complete', {
+        const isValidPick =
+          state.phase === 'card-picking' &&
+          Boolean(state.category) &&
+          state.draws.length < 3 &&
+          !state.draws.some((draw) => draw.card.id === cardId) &&
+          cards.some((card) => card.id === cardId)
+        if (!isValidPick) return
+
+        dispatch({ type: 'PICK_CARD', cardId })
+        if (state.category && state.draws.length === 2) {
+          trackEvent('tarot_spread_completed', {
             category_id: state.category.id,
-            cards: [...state.draws.map((d) => d.card.id), cardId].join(',')
+            card_count: 3
           })
         }
-        dispatch({ type: 'PICK_CARD', cardId })
       },
       restart: () => {
-        trackEvent('restart_reading', { previous_category_id: state.category?.id })
+        if (state.phase === 'category-select') return
         dispatch({ type: 'RESTART' })
+        trackEvent('tarot_reading_restarted', { previous_category_id: state.category?.id })
       }
     }),
     [state]

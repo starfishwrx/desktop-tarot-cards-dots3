@@ -9,6 +9,17 @@ interface Env {
   DOTS_BASE_URL: string
 }
 
+const ORIGIN_TIMEOUT_MS = 12_000
+const hashedAssetPath = /^\/assets\/[\w.-]+-[A-Za-z0-9_-]+\.(?:css|js|jpg|jpeg|png|svg|webp|woff2?)$/i
+
+export function cacheControlFor(pathname: string, contentType: string | null): string {
+  if (hashedAssetPath.test(pathname)) return 'public, max-age=31536000, immutable'
+  if (contentType?.includes('text/html') || pathname === '/' || pathname.endsWith('.html')) {
+    return 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400'
+  }
+  return 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400'
+}
+
 const allowedOrigins = new Set([
   'https://tarot.haixing.uk',
   'https://starfish-tarot.ai-builders.space',
@@ -116,23 +127,62 @@ async function handleReading(request: Request, env: Env): Promise<Response> {
   }
 }
 
-async function proxyToOrigin(request: Request, env: Env): Promise<Response> {
+async function proxyToOrigin(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     return Response.json({ error: { code: 'NOT_FOUND', message: 'Not found' } }, { status: 404 })
   }
   const incoming = new URL(request.url)
   const target = new URL(`${incoming.pathname}${incoming.search}`, env.ORIGIN_URL)
-  const response = await fetch(new Request(target, request))
-  return new Response(response.body, response)
+
+  const cacheKey = new Request(incoming.toString(), { method: 'GET' })
+  const cache = await caches.open('starfish-origin-v1')
+  if (request.method === 'GET') {
+    const cached = await cache.match(cacheKey)
+    if (cached) return cached
+  }
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), ORIGIN_TIMEOUT_MS)
+  try {
+    const originRequest = new Request(new Request(target, request), { signal: controller.signal })
+    const originResponse = await fetch(originRequest)
+    const headers = new Headers(originResponse.headers)
+    headers.delete('Set-Cookie')
+    headers.set('Cache-Control', cacheControlFor(incoming.pathname, headers.get('Content-Type')))
+    headers.set('X-Content-Type-Options', 'nosniff')
+
+    const response = new Response(originResponse.body, {
+      status: originResponse.status,
+      statusText: originResponse.statusText,
+      headers
+    })
+    if (request.method === 'GET' && originResponse.ok) {
+      ctx.waitUntil(cache.put(cacheKey, response.clone()))
+    }
+    return response
+  } catch (error) {
+    const timedOut = error instanceof Error && error.name === 'AbortError'
+    return Response.json(
+      {
+        error: {
+          code: timedOut ? 'ORIGIN_TIMEOUT' : 'ORIGIN_UNAVAILABLE',
+          message: 'The site is temporarily unavailable. Please try again.'
+        }
+      },
+      { status: timedOut ? 504 : 502, headers: { 'Cache-Control': 'no-store' } }
+    )
+  } finally {
+    clearTimeout(timeout)
+  }
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url)
     if (url.pathname === '/api/reading') return handleReading(request, env)
     if (url.pathname === '/healthz') {
       return Response.json({ status: 'ok', gateway: 'cloudflare' })
     }
-    return proxyToOrigin(request, env)
+    return proxyToOrigin(request, env, ctx)
   }
 } satisfies ExportedHandler<Env>
