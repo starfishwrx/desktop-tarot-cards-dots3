@@ -5,6 +5,7 @@ import { CategoryDefinition } from '../types/spread'
 import { useLanguage } from '../context/LanguageContext'
 import { analyseSpread } from '../utils/spreadAnalysis'
 import { Localized } from '../types/card'
+import { trackEvent } from '../utils/analytics'
 import positionLens from '../data/positionLens.json'
 
 const lenses = positionLens as Record<string, Localized<string>>
@@ -30,7 +31,14 @@ export function AiReadingPanel({ category, question, draws }: AiReadingPanelProp
   }, [draws, language])
 
   const generate = async (): Promise<void> => {
+    const startedAt = Date.now()
     setState({ status: 'loading' })
+    trackEvent('ai_reading_request', {
+      category_id: category.id,
+      language,
+      has_custom_question: Boolean(question)
+    })
+
     try {
       const response = await fetch('/api/ai-reading', {
         method: 'POST',
@@ -60,12 +68,33 @@ export function AiReadingPanel({ category, question, draws }: AiReadingPanelProp
       })
 
       const result = (await response.json()) as AiReadingResponse
+      const durationMs = Date.now() - startedAt
+
       if (result.ok) {
+        trackEvent('ai_reading_result', {
+          category_id: category.id,
+          language,
+          status: 'success',
+          duration_ms: durationMs
+        })
         setState({ status: 'done', text: result.text })
       } else {
+        trackEvent('ai_reading_result', {
+          category_id: category.id,
+          language,
+          status: 'error',
+          code: result.code,
+          duration_ms: durationMs
+        })
         setState({ status: 'error', code: result.code })
       }
     } catch {
+      trackEvent('ai_reading_result', {
+        category_id: category.id,
+        language,
+        status: 'network_error',
+        duration_ms: Date.now() - startedAt
+      })
       setState({ status: 'error', code: 'NETWORK_ERROR' })
     }
   }

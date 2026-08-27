@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { Language } from '../types/card'
 import { ui } from '../i18n/strings'
+import { trackEvent } from '../utils/analytics'
 
 const STORAGE_KEY = 'tarot.language'
 
@@ -24,7 +25,10 @@ export function LanguageProvider({ children }: { children: ReactNode }): JSX.Ele
     localStorage.setItem(STORAGE_KEY, language)
   }, [language])
 
-  const setLanguage = (lang: Language): void => setLanguageState(lang)
+  const setLanguage = (lang: Language): void => {
+    trackEvent('switch_language', { language: lang })
+    setLanguageState(lang)
+  }
   const t = (key: keyof typeof ui): string => ui[key][language]
 
   return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>

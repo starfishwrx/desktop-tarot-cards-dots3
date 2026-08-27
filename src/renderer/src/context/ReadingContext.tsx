@@ -6,6 +6,7 @@ import { CategoryDefinition, CategoryId } from '../types/spread'
 import { DrawnCard } from '../types/reading'
 import { shuffle } from '../utils/shuffle'
 import { assignDraw } from '../utils/draw'
+import { trackEvent } from '../utils/analytics'
 
 const cards: CardMeaning[] = deck
 const categories = spreadsData as CategoryDefinition[]
@@ -98,10 +99,27 @@ export function ReadingProvider({ children }: { children: ReactNode }): JSX.Elem
     () => ({
       ...state,
       categories,
-      selectCategory: (categoryId) => dispatch({ type: 'SELECT_CATEGORY', categoryId }),
-      submitQuestion: (question) => dispatch({ type: 'SUBMIT_QUESTION', question }),
-      pickCard: (cardId) => dispatch({ type: 'PICK_CARD', cardId }),
-      restart: () => dispatch({ type: 'RESTART' })
+      selectCategory: (categoryId) => {
+        trackEvent('select_category', { category_id: categoryId })
+        dispatch({ type: 'SELECT_CATEGORY', categoryId })
+      },
+      submitQuestion: (question) => {
+        trackEvent('submit_question', { question_length: question.trim().length })
+        dispatch({ type: 'SUBMIT_QUESTION', question })
+      },
+      pickCard: (cardId) => {
+        if (state.category && state.draws.length === 2 && !state.draws.some((d) => d.card.id === cardId)) {
+          trackEvent('draw_complete', {
+            category_id: state.category.id,
+            cards: [...state.draws.map((d) => d.card.id), cardId].join(',')
+          })
+        }
+        dispatch({ type: 'PICK_CARD', cardId })
+      },
+      restart: () => {
+        trackEvent('restart_reading', { previous_category_id: state.category?.id })
+        dispatch({ type: 'RESTART' })
+      }
     }),
     [state]
   )
@@ -114,3 +132,4 @@ export function useReading(): ReadingContextValue {
   if (!ctx) throw new Error('useReading must be used within a ReadingProvider')
   return ctx
 }
+
