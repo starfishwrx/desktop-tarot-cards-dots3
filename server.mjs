@@ -1,11 +1,12 @@
 import express from 'express'
 import { existsSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { resolve, sep } from 'node:path'
 
 const app = express()
 const port = Number.parseInt(process.env.PORT || '8000', 10)
 const distDir = resolve(process.cwd(), 'dist-web')
 const publicGateway = 'https://tarot.haixing.uk/api/reading'
+const indexPath = resolve(distDir, 'index.html')
 
 if (!existsSync(distDir)) {
   throw new Error('dist-web is missing; run npm run build before starting the server')
@@ -28,10 +29,29 @@ app.post('/api/reading', (_request, response) => {
   response.redirect(307, publicGateway)
 })
 
-app.use(express.static(distDir, { index: 'index.html', maxAge: '1h' }))
+function sendAppShell(response) {
+  response.setHeader('Cache-Control', 'no-cache')
+  response.sendFile(indexPath)
+}
+
+app.get('/', (_request, response) => sendAppShell(response))
+
+app.use(
+  express.static(distDir, {
+    index: false,
+    maxAge: '1h',
+    setHeaders(response, filePath) {
+      if (filePath.includes(`${sep}assets${sep}`)) {
+        response.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
+      } else if (filePath === indexPath) {
+        response.setHeader('Cache-Control', 'no-cache')
+      }
+    }
+  })
+)
 app.use((request, response, next) => {
   if (request.method !== 'GET' && request.method !== 'HEAD') return next()
-  response.sendFile(resolve(distDir, 'index.html'))
+  sendAppShell(response)
 })
 
 app.use((_request, response) => {

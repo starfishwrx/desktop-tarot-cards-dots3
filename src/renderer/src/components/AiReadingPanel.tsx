@@ -18,7 +18,7 @@ type State =
 
 interface ReadingResponse {
   text?: string
-  error?: { message?: string }
+  error?: { code?: string; message?: string }
 }
 
 export function AiReadingPanel({
@@ -36,7 +36,7 @@ export function AiReadingPanel({
   const generate = async (): Promise<void> => {
     const startedAt = Date.now()
     setState({ status: 'loading' })
-    trackEvent('ai_reading_request', {
+    trackEvent('tarot_ai_requested', {
       category_id: category.id,
       language,
       has_custom_question: Boolean(question)
@@ -56,31 +56,37 @@ export function AiReadingPanel({
       const result = (await response.json()) as ReadingResponse
       const durationMs = Date.now() - startedAt
       if (!response.ok || !result.text) {
-        trackEvent('ai_reading_result', {
+        trackEvent('tarot_ai_completed', {
           category_id: category.id,
           language,
-          status: 'error',
+          outcome: 'error',
+          error_code: result.error?.code || `HTTP_${response.status}`,
           duration_ms: durationMs
         })
-        throw new Error(result.error?.message || t('aiUnavailable'))
+        setState({
+          status: 'error',
+          message: result.error?.message || t('aiUnavailable')
+        })
+        return
       }
-      trackEvent('ai_reading_result', {
+      trackEvent('tarot_ai_completed', {
         category_id: category.id,
         language,
-        status: 'success',
+        outcome: 'success',
         duration_ms: durationMs
       })
       setState({ status: 'done', text: result.text })
-    } catch (error) {
-      trackEvent('ai_reading_result', {
+    } catch {
+      trackEvent('tarot_ai_completed', {
         category_id: category.id,
         language,
-        status: 'error',
+        outcome: 'network_error',
+        error_code: 'NETWORK_OR_INVALID_RESPONSE',
         duration_ms: Date.now() - startedAt
       })
       setState({
         status: 'error',
-        message: error instanceof Error ? error.message : t('aiUnavailable')
+        message: t('aiUnavailable')
       })
     }
   }

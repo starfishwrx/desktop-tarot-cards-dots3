@@ -5,7 +5,7 @@ import { CategoryPicker } from './components/CategoryPicker'
 import { QuestionInput } from './components/QuestionInput'
 import { DeckScreen } from './components/DeckScreen'
 import { RevealScreen } from './components/RevealScreen'
-import { SeoContent } from './components/SeoContent'
+import { AnalyticsConsent } from './components/AnalyticsConsent'
 
 function Screens(): JSX.Element {
   const { phase } = useReading()
@@ -23,7 +23,7 @@ function Shell(): JSX.Element {
         <LanguageToggle />
       </div>
       <Screens />
-      <SeoContent />
+      <AnalyticsConsent />
     </main>
   )
 }
