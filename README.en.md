@@ -21,7 +21,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:8000`.
 
 ## Verification and production
 
@@ -32,7 +32,7 @@ npm run build
 NODE_ENV=production DOTS_API_KEY=your-server-secret npm start
 ```
 
-See [`docs/deploy.md`](docs/deploy.md) for AI Build Space deployment settings.
+See [`docs/deploy.md`](docs/deploy.md) for AIBuildCoach (`ai-builders.space`) deployment settings.
 
 ## License
 

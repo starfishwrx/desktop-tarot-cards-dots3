@@ -1,0 +1,12 @@
+{
+  "repo_url": "https://github.com/starfishwrx/desktop-tarot-cards-dots3",
+  "service_name": "desktop-tarot-dots3",
+  "branch": "codex/dots-web-ai",
+  "port": 8000,
+  "env_vars": {
+    "NODE_ENV": "production",
+    "DOTS_BASE_URL": "https://note3-prev-api.askdiandian.com",
+    "DOTS_MODEL": "dots3-note-prev",
+    "DOTS_TIMEOUT_MS": "30000"
+  }
+}

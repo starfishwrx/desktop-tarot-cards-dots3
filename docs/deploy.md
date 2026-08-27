@@ -1,39 +1,50 @@
-# AI Build Space 部署
+# AIBuildCoach 部署
 
-项目现在由一个 Node 进程同时提供 Vite 静态页面和 `/api/ai-reading` 服务端接口。
+部署目标是 AIBuildCoach 提供的 `ai-builders.space`。平台会从公开 GitHub 仓库拉取指定分支，通过根目录 `Dockerfile` 构建并运行单个容器。
 
-## 构建与启动
+## 已配置参数
 
-- Node.js：20 或更新版本
-- 安装：`npm ci`
-- 构建：`npm run build`
-- 启动：`NODE_ENV=production npm start`
-- 健康检查：`GET /api/health`
+部署参数位于根目录 [`deploy-config.json`](../deploy-config.json)：
 
-AI Build Space 需要把构建命令设置为 `npm run build`，启动命令设置为 `npm start`，运行时环境变量设置为 `NODE_ENV=production`。
+- 仓库：`https://github.com/starfishwrx/desktop-tarot-cards-dots3`
+- 服务名：`desktop-tarot-dots3`
+- 分支：`codex/dots-web-ai`
+- 公开地址：`https://desktop-tarot-dots3.ai-builders.space`
+- 端口：读取平台提供的 `PORT`，默认 `8000`
 
-## 服务端环境变量
+项目由同一个 Express 进程提供 Vite 静态页面、`POST /api/ai-reading` 和 `GET /api/health`，没有第二个 Web 进程或后台任务。
 
-| 名称 | 必填 | 默认值 |
-| --- | --- | --- |
-| `DOTS_API_KEY` | 是 | 无 |
-| `DOTS_BASE_URL` | 否 | `https://note3-prev-api.askdiandian.com` |
-| `DOTS_MODEL` | 否 | `dots3-note-prev` |
-| `DOTS_TIMEOUT_MS` | 否 | `30000` |
-| `PORT` | 否 | `3000` |
+## Docker 构建
 
-`DOTS_API_KEY` 必须配置为服务端 Secret。不要配置成 `VITE_` 前缀变量；Vite 会把这类变量编译进浏览器代码。
+`Dockerfile` 使用两个阶段：
 
-## 运行模型
+1. Builder 阶段安装完整依赖，执行类型检查和前后端构建。
+2. Runtime 阶段只安装生产依赖，并复制 `dist-web` 与 `dist-server`。
 
-公开接口只接受三张牌的结构化数据。服务端负责构造系统提示词，浏览器不能传入任意 messages、模型名或上游地址。默认限流为单 IP 每分钟 5 次、全站每分钟 50 次。
+容器启动命令为：
 
-当前限流存储位于 Node 进程内，部署时使用单实例。若需要横向扩容，应先把限流存储替换成 AI Build Space 的共享 KV。
+```sh
+sh -c "PORT=${PORT:-8000} node dist-server/server/index.js"
+```
 
-## 发布检查
+## 环境变量
 
-1. 运行 `npm test`、`npm run typecheck`、`npm run build`。
-2. 配置服务端 Secret 后部署预览版本。
-3. 打开 `/api/health`，确认返回 `{"ok":true,"service":"tarot-dots-api"}`。
-4. 完成一组中文和一组英文抽牌，点击“生成 AI 解读”。
-5. 在浏览器构建产物、Network 和服务端日志中搜索 Key 前缀，确认没有泄漏。
+`deploy-config.json` 只保存非敏感配置：
+
+| 名称 | 值 |
+| --- | --- |
+| `NODE_ENV` | `production` |
+| `DOTS_BASE_URL` | `https://note3-prev-api.askdiandian.com` |
+| `DOTS_MODEL` | `dots3-note-prev` |
+| `DOTS_TIMEOUT_MS` | `30000` |
+
+`DOTS_API_KEY` 只在实际部署请求中注入，不写入 `deploy-config.json`、GitHub、Docker 镜像层或前端构建产物。AIBuildCoach 自带的 `AI_BUILDER_TOKEN` 由平台自动注入，不需要放进部署参数。
+
+## 发布与回读
+
+1. 本地运行 `npm test`、`npm run typecheck`、`npm run build`。
+2. 可用 Docker 时执行 `docker build -t desktop-tarot-dots3 .`。
+3. 将 `codex/dots-web-ai` 推送到公开 GitHub 仓库。
+4. 调用 AIBuildCoach 的 `POST /v1/deployments`，同时注入运行期 `DOTS_API_KEY`。
+5. 查询部署状态和日志，直到服务进入健康状态。
+6. 验证 `/api/health`、中文解读、英文解读和每 IP 限流。

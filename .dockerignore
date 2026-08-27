@@ -1,0 +1,11 @@
+.git
+.github
+artifacts
+dist-server
+dist-web
+node_modules
+tmp
+.env
+.env.*
+!.env.example
+*.tsbuildinfo

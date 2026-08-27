@@ -21,7 +21,7 @@ copy .env.example .env.local
 npm run dev
 ```
 
-打开 `http://localhost:3000`。
+打开 `http://localhost:8000`。
 
 ## 测试与构建
 
@@ -39,7 +39,7 @@ set DOTS_API_KEY=your-server-secret
 npm start
 ```
 
-AI Build Space 的完整配置见 [`docs/deploy.md`](docs/deploy.md)。
+AIBuildCoach（`ai-builders.space`）的完整配置见 [`docs/deploy.md`](docs/deploy.md)。
 
 ## 功能
 

@@ -4,7 +4,7 @@ import express from 'express'
 import { createApp } from './app.js'
 
 const app = createApp()
-const port = Number(process.env.PORT ?? 3000)
+const port = Number(process.env.PORT ?? 8000)
 const isProduction = process.env.NODE_ENV === 'production'
 
 if (isProduction) {
